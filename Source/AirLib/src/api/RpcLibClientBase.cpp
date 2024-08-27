@@ -644,6 +644,12 @@ __pragma(warning(disable : 4239))
         {
             return &pimpl_->client;
         }
+
+        // I write API for eVTOL
+        void RpcLibClientBase::setRotorMode_evtol(int mode, const std::string& vehicle_name)
+        {
+            pimpl_->client.call("setRotorMode_evtol", mode, vehicle_name);
+        }
     }
 } //namespace
 

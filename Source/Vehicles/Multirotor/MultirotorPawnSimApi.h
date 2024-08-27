@@ -23,6 +23,7 @@ public:
     typedef msr::airlib::Pose Pose;
 
     typedef MultirotorPawnEvents::RotorActuatorInfo RotorActuatorInfo;
+    typedef MultirotorPawnEvents::eVTOLRotorActuatorInfo eVTOLRotorActuatorInfo;
 
 public:
     virtual void initialize() override;
@@ -63,6 +64,7 @@ private:
     std::unique_ptr<MultiRotor> multirotor_physics_body_;
     unsigned int rotor_count_;
     std::vector<RotorActuatorInfo> rotor_actuator_info_;
+    std::vector<eVTOLRotorActuatorInfo> evtol_rotor_mode_;
 
     //show info on collision response from physics engine
     CollisionResponse collision_response;

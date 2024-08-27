@@ -509,6 +509,11 @@ namespace airlib
             return getWorldSimApi()->getSettingsString();
         });
 
+        pimpl_->server.bind("setRotorMode_evtol", [&](int mode, const std::string& vehicle_name) -> void {
+            getVehicleApi(vehicle_name)->setRotorMode_evtol(mode);
+        });
+
+
         //if we don't suppress then server will bomb out for exceptions raised by any method
         pimpl_->server.suppress_exceptions(true);
     }

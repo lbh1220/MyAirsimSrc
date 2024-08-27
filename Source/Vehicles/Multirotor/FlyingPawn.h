@@ -36,6 +36,8 @@ public:
     //called by API to set rotor speed
     void setRotorSpeed(const std::vector<MultirotorPawnEvents::RotorActuatorInfo>& rotor_infos);
     void initializeRotors(const std::vector<MultirotorPawnEvents::RotorActuatorInfo>& rotor_infos);
+    void initializeRotors_evtol(const std::vector<MultirotorPawnEvents::eVTOLRotorActuatorInfo>& rotor_mode_info);
+    void setRotorSpeed_evtol(const std::vector<MultirotorPawnEvents::eVTOLRotorActuatorInfo>& rotor_mode_info);
 
 private: //variables
     //Unreal components
@@ -52,7 +54,11 @@ private: //variables
 
     UPROPERTY()
     TArray<URotatingMovementComponent*> rotating_movements_;
+    TArray<URotatingMovementComponent*> rotating_movements_evtol;
+    TArray<UStaticMeshComponent*> rotor_evtol;
+
 
     MultirotorPawnEvents pawn_events_;
     int init_id_;
+    int init_id_evtol;
 };

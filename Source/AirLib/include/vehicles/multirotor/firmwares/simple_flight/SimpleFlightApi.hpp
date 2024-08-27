@@ -44,6 +44,7 @@ namespace airlib
 
             //create firmware
             firmware_.reset(new simple_flight::Firmware(&params_, board_.get(), comm_link_.get(), estimator_.get()));
+            rotor_mode_evtol = 0;
         }
 
     public: //VehicleApiBase implementation
@@ -140,6 +141,21 @@ namespace airlib
             return true;
         }
 
+        // I write API for eVTOL
+        virtual int getRotorMode_evtol() const override
+        {
+            std::cout << "in SimpleFlightAPI" << std::endl;
+            return rotor_mode_evtol;
+        }
+
+        virtual void setRotorMode_evtol(int mode) override
+        {
+            unused(mode);
+            rotor_mode_evtol = mode;
+            std::cout << "in SimpleFlightAPI" << std::endl;
+            // return false;
+        }
+        
     protected:
         virtual Kinematics::State getKinematicsEstimated() const override
         {
@@ -415,6 +431,7 @@ namespace airlib
         const MultiRotorParams* vehicle_params_;
 
         int remote_control_id_ = 0;
+        int rotor_mode_evtol = 0;
         simple_flight::Params params_;
 
         unique_ptr<AirSimSimpleFlightBoard> board_;

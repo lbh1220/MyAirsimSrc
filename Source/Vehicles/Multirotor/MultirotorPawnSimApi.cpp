@@ -23,6 +23,7 @@ void MultirotorPawnSimApi::initialize()
     multirotor_physics_body_ = std::unique_ptr<MultiRotor>(new MultiRotorPhysicsBody(vehicle_params_.get(), vehicle_api_.get(), getKinematics(), getEnvironment()));
     rotor_count_ = multirotor_physics_body_->wrenchVertexCount();
     rotor_actuator_info_.assign(rotor_count_, RotorActuatorInfo());
+    evtol_rotor_mode_.assign(1, eVTOLRotorActuatorInfo());
 
     vehicle_api_->setSimulatedGroundTruth(getGroundTruthKinematics(), getGroundTruthEnvironment());
 
@@ -78,6 +79,8 @@ void MultirotorPawnSimApi::updateRenderedState(float dt)
         info->rotor_control_filtered = rotor_output.control_signal_filtered;
     }
 
+    evtol_rotor_mode_[0].rotor_mode = vehicle_api_->getRotorMode_evtol();
+    // evtol_rotor_mode_[0].rotor_mode = 0;
     vehicle_api_->getStatusMessages(vehicle_api_messages_);
 
     if (getRemoteControlID() >= 0)
@@ -127,6 +130,7 @@ void MultirotorPawnSimApi::updateRendering(float dt)
     }
 
     pawn_events_->getActuatorSignal().emit(rotor_actuator_info_);
+    pawn_events_->geteVTOLActuatorSignal().emit(evtol_rotor_mode_);
 }
 
 void MultirotorPawnSimApi::setPose(const Pose& pose, bool ignore_collision)

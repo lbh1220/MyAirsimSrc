@@ -107,6 +107,20 @@ Some methods may not be applicable to specific vehicle in which case an exceptio
             return false;
         }
 
+         // I write API for eVTOL
+        virtual int getRotorMode_evtol() const
+        {
+            static const int invalid_rotor_mode = 3;
+            std::cout << "in SimpleFlightAPI" << std::endl;
+            return invalid_rotor_mode;
+        }
+
+        virtual void setRotorMode_evtol(int mode)
+        {
+            unused(mode);
+            // return false;
+        }
+
         // Sensors APIs
         virtual const SensorCollection& getSensors() const
         {
@@ -172,7 +186,6 @@ Some methods may not be applicable to specific vehicle in which case an exceptio
 
             return distance_sensor->getOutput();
         }
-
         virtual ~VehicleApiBase() = default;
 
         //exceptions
@@ -221,6 +234,7 @@ Some methods may not be applicable to specific vehicle in which case an exceptio
 
             return sensor;
         }
+        
     };
 }
 } //namespace

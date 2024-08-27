@@ -8,6 +8,8 @@ AFlyingPawn::AFlyingPawn()
 {
     init_id_ = pawn_events_.getActuatorSignal().connect_member(this, &AFlyingPawn::initializeRotors);
     pawn_events_.getActuatorSignal().connect_member(this, &AFlyingPawn::setRotorSpeed);
+    init_id_evtol = pawn_events_.geteVTOLActuatorSignal().connect_member(this, &AFlyingPawn::initializeRotors_evtol);
+    pawn_events_.geteVTOLActuatorSignal().connect_member(this, &AFlyingPawn::setRotorSpeed_evtol);
 }
 
 void AFlyingPawn::BeginPlay()
@@ -95,4 +97,119 @@ void AFlyingPawn::initializeRotors(const std::vector<MultirotorPawnEvents::Rotor
         rotating_movements_.Add(UAirBlueprintLib::GetActorComponent<URotatingMovementComponent>(this, TEXT("Rotation") + FString::FromInt(i)));
     }
     pawn_events_.getActuatorSignal().disconnect(init_id_);
+}
+void AFlyingPawn::initializeRotors_evtol(const std::vector<MultirotorPawnEvents::eVTOLRotorActuatorInfo>& rotor_mode_info)
+{
+    // add rotor of eVTOL
+    for (auto i = 0; i < 4; ++i) {
+        rotating_movements_evtol.Add(UAirBlueprintLib::GetActorComponent<URotatingMovementComponent>(this, TEXT("RotationL") + FString::FromInt(i)));
+        rotating_movements_evtol.Add(UAirBlueprintLib::GetActorComponent<URotatingMovementComponent>(this, TEXT("RotationR") + FString::FromInt(i)));
+        rotor_evtol.Add(UAirBlueprintLib::GetActorComponent<UStaticMeshComponent>(this, TEXT("PropL") + FString::FromInt(i)));
+        rotor_evtol.Add(UAirBlueprintLib::GetActorComponent<UStaticMeshComponent>(this, TEXT("PropR") + FString::FromInt(i)));
+    }
+    rotating_movements_evtol.Add(UAirBlueprintLib::GetActorComponent<URotatingMovementComponent>(this, TEXT("RotationC") + FString::FromInt(0)));
+    rotor_evtol.Add(UAirBlueprintLib::GetActorComponent<UStaticMeshComponent>(this, TEXT("PropC") + FString::FromInt(0)));
+    pawn_events_.geteVTOLActuatorSignal().disconnect(init_id_evtol);
+}
+void AFlyingPawn::setRotorSpeed_evtol(const std::vector<MultirotorPawnEvents::eVTOLRotorActuatorInfo>& rotor_mode_info)
+{
+    int rotor_mode = rotor_mode_info[0].rotor_mode;
+    if (rotor_mode == 2)
+    {
+        for (auto i = 0; i < 8; ++i) {
+            auto comp = rotating_movements_evtol[i];
+            if (comp != nullptr)
+            {
+                if (i == 0 || i == 3 || i == 5 || i == 6) {
+                    comp->RotationRate.Yaw = 9000;
+                }
+                else {
+                    comp->RotationRate.Yaw = -9000;
+                }
+            }
+        }
+        auto comp = rotating_movements_evtol[8];
+        if (comp != nullptr)
+        {
+
+            comp->RotationRate.Yaw = 9000;
+        }
+    }
+    else if (rotor_mode == 0)
+    {
+        for (auto i = 0; i < 8; ++i) {
+            auto comp = rotating_movements_evtol[i];
+            if (comp != nullptr)
+            {
+                comp->RotationRate.Yaw = 0;
+            }
+            auto prop = rotor_evtol[i];
+            if (prop != nullptr)
+            {
+                FRotator NewRotation(0.0f, 0.0f, 0.0f);
+                prop->SetRelativeRotation(NewRotation);
+            }
+        }
+        auto comp = rotating_movements_evtol[8];
+        if (comp != nullptr)
+        {
+
+            comp->RotationRate.Yaw = 0;
+        }
+        //auto prop = rotor_evtol[8];
+        //if (prop != nullptr)
+        //{
+        //    FRotator NewRotation(0.0f, -90.0f, 0.0f);
+        //    prop->SetRelativeRotation(NewRotation);
+        //}
+    }
+    if (rotor_mode == 1)
+    {
+        for (auto i = 0; i < 8; ++i) {
+            auto comp = rotating_movements_evtol[i];
+            if (comp != nullptr)
+            {
+                if (i == 0 || i == 3 || i == 5 || i == 6) {
+                    comp->RotationRate.Yaw = 9000;
+                }
+                else {
+                    comp->RotationRate.Yaw = -9000;
+                }
+            }
+        }
+        auto comp = rotating_movements_evtol[8];
+        if (comp != nullptr)
+        {
+
+            comp->RotationRate.Yaw = 0;
+        }
+        //auto prop = rotor_evtol[8];
+        //if (prop != nullptr)
+        //{
+        //    FRotator NewRotation(0.0f, 0.0f, 0.0f);
+        //    prop->SetRelativeRotation(NewRotation);
+        //}
+    }
+    if (rotor_mode == 3)
+    {
+        for (auto i = 0; i < 8; ++i) {
+            auto comp = rotating_movements_evtol[i];
+            if (comp != nullptr)
+            {
+                comp->RotationRate.Yaw = 0;
+            }
+            auto prop = rotor_evtol[i];
+            if (prop != nullptr)
+            {
+                FRotator NewRotation(0.0f, 0.0f, 0.0f);
+                prop->SetRelativeRotation(NewRotation);
+            }
+        }
+        auto comp = rotating_movements_evtol[8];
+        if (comp != nullptr)
+        {
+
+            comp->RotationRate.Yaw = 9000;
+        }
+    }
 }
