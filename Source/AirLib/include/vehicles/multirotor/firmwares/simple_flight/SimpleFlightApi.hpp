@@ -144,7 +144,7 @@ namespace airlib
         // I write API for eVTOL
         virtual int getRotorMode_evtol() const override
         {
-            std::cout << "in SimpleFlightAPI" << std::endl;
+            // std::cout << "in SimpleFlightAPI" << std::endl;
             return rotor_mode_evtol;
         }
 
@@ -152,7 +152,7 @@ namespace airlib
         {
             unused(mode);
             rotor_mode_evtol = mode;
-            std::cout << "in SimpleFlightAPI" << std::endl;
+            // std::cout << "in SimpleFlightAPI" << std::endl;
             // return false;
         }
         

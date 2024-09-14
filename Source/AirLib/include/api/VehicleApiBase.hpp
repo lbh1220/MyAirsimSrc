@@ -111,7 +111,7 @@ Some methods may not be applicable to specific vehicle in which case an exceptio
         virtual int getRotorMode_evtol() const
         {
             static const int invalid_rotor_mode = 3;
-            std::cout << "in SimpleFlightAPI" << std::endl;
+            // std::cout << "in SimpleFlightAPI" << std::endl;
             return invalid_rotor_mode;
         }
 
